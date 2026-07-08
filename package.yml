@@ -77,7 +77,6 @@ rpm_replaces:
   - tuxedo-keyboard < 4.0.0-1
   - tuxedo-keyboard-ite < 4.0.0-1
 
-
 pkg_scripts:
   - deb_stages:
     - post_install
@@ -184,33 +183,32 @@ pkg_scripts:
         rm -rf /usr/src/tuxedo-drivers-4.21.1
         rm -rf /usr/src/tuxedo-drivers-4.21.2
 
-
 changelog:
   - version: "4.22.3"
     author: "Werner Sembach"
     date: 2026-06-17 16:37:00
     entries:
-      - Fix fedora-44 test
-      - Adjust for current SPC and fix various problems with generated files
-      - Switch to new tag workflow in CI
+      - "Fix fedora-44 test"
+      - "Adjust for current SPC and fix various problems with generated files"
+      - "Switch to new tag workflow in CI"
   - version: "4.22.2"
     author: "Maximilian Arnold"
     date: 2026-04-29 18:11:00
     entries:
-      - Fix debian postinst dkms errors in chroot
+      - "Fix debian postinst dkms errors in chroot"
   - version: "4.22.1"
     author: "Werner Sembach"
     date: 2026-04-10 13:38:00
     entries:
-      - Fix alpm dkms package folder name
+      - "Fix alpm dkms package folder name"
   - version: "4.22.0"
     author: "Werner Sembach"
     date: 2026-04-09 21:37:00
     entries:
-      - Add support for InfinityBook Max 16 Gen10 AMD
-      - Fix pulsating fan on several devices
-      - Fix CI tests
-      - Fix Makefile package target
+      - "Add support for InfinityBook Max 16 Gen10 AMD"
+      - "Fix pulsating fan on several devices"
+      - "Fix CI tests"
+      - "Fix Makefile package target"
   - version: "4.21.3"
     author: "Werner Sembach"
     date: 2026-03-23 21:13:00
@@ -600,115 +598,4 @@ changelog:
     author: "Christoffer Sandberg"
     date: 2020-03-17 15:54:00
     entries:
-      - "Merge tuxedo-keyboard and tuxedo-keyboard-ite"
-      - "Rename package to tuxedo-drivers"
-      - "Rework packaging process"
-      - "Fn-lock sysfs interface for nb02 and nb01 (newer models with CCC from v4.0)"
-      - "Flexicharger sysfs interface for nb01 (new plus legacy which works on some"
-      - "Various backlight bugfixes and rework"
-      - "nb05 driver collection (so far used by Pulse Gen3)"
-      - "Add color scaling for Stellaris Gen5 AMD devices"
-      - "Tweak IBPG8 TDP limits"
-      - "Add missing IBPG8 TDP definitions"
-      - "Polaris/Stellaris AMD Gen5 support"
-      - "Aura Gen3 support"
-      - "Fix build on certain systems"
-      - "Adjusted lightbar USB product exclusion (prevents driver binding to unused"
-      - "Lightbar color scaling for Stellaris 17 Gen5"
-      - "Quirks for setting missing IBP16Gen8 keyboard layouts"
-      - "Fix IBP 16 Gen8 mk1 layout set to 14inch variant layout"
-      - "Keyboard backlight support for IBS17Gen8 (white-only)"
-      - "Fn backlight key support for IBS17Gen8"
-      - "Fix for certain white kbd bl identification on boot (XA15)"
-      - "General white-only kbd bl rework to use firmware set on Fn+brightness"
-      - "Kernel 6.4 build compatibility fix"
-      - "Fallback ROM ID set quirk support"
-      - "IBP Gen8 keyboard backlight support"
-      - "IBP Gen8 TDP support"
-      - "Color scaling for certain one-zone RGB keyboards"
-      - "Fix for certain white kbd bl devices (like Pulse) not setting brightness"
-      - "Four zone backlight support for Stellaris Gen5"
-      - "Experimental buffered writes for Stellaris/Fusion per-key variants"
-      - "Fix missing state write on resume for some devices which woke up with"
-      - "Add TDP device definitions for Stellaris Intel Gen5"
-      - "Add device check on newer cpu gens"
-      - "Color scaling for Stellaris Intel Gen5"
-      - "Lightbar impl. for Stellaris Gen4/5"
-      - Fix "lost fan control" in some circumstances (on eg. IBPGen7)
-      - "KBD BL: Interface rewrite, now generally exported through"
-      - "KBD BL: New interface impl. for white backlight keyboards (also"
-      - "Note: Old interface is hereby deprecated (and removed)"
-      - "Leds interface support (/sys/class/leds)"
-      - "Fix upcoming 6.2 kernel build issue (from github Buddy-Matt)"
-      - "Re-write last set charging priority on barrel plug connect"
-      - "UW interface performance tweaks (should help with lagging keyboard issues"
-      - "Fix IBP14Gen6 second fan not spinning (alternative fan ctl approach)"
-      - "Fix some error-lookalike messages in kernel log (aka prevent uw feature"
-      - "Enables dynamic boost (max offset) for certain devices needing sw ctl"
-      - "Adds charging profile interface for devices supporting charging profiles"
-      - "Adds charging priority interface for devices supporting USB-C PD charging"
-      - "Add per-device color scaling to ite_8291 driver"
-      - "Add additional scaling setting for Stellaris 17 AMD Gen 4"
-      - "Add USB ID for Stellaris 17 Gen 4 keyboard backlight"
-      - "Reenable fans-off for some devices that got it turned of as a temporary"
-      - "Fix default fan curve not being reenabled when tccd is stopped"
-      - "Add power profiles and tdp functionality (uw)"
-      - "Introduce alternative fan control (uw)"
-      - Fan control parameters from driver "has fan off" and "min fan speed"
-      - "Fixes missing/broken fan control on newer devices"
-      - "Add Stellaris Intel gen 4 lightbar support"
-      - "Default lightbar to off"
-      - "Add IBS15v6 & IBS17v6 new module name to perf. prof workaround"
-      - "Interface modularization (uw)"
-      - "Fix Pulse14/15 gen 1 keyboard backlight ctrl dissapearing"
-      - "Add IBS14v6 to perf. prof workaround"
-      - "Add new Polaris devices gen 2 & gen 3 keyb bl support"
-      - "Add Stellaris (gen3) lightbar support"
-      - "Fix kernel 5.13 build issue (from github BlackIkeEagle)"
-      - "Add another Fusion lightbar ID (from github ArlindoFNeto)"
-      - "Add tuxedo-io perf. prof. set (cl)"
-      - "Add NS50MU to perf. profile workaround"
-      - "Add EDUBOOK1502 to perf. profile workaround"
-      - "Add XP gen 11 & 12 to perf. profile workaround"
-      - "Clean-up cl driver state init (should fix some init color issues)"
-      - "Fixed various possible race conditions on driver init"
-      - "Added IBS14v5 to perf. profile workaround"
-      - "Added new Aura board name to perf. profile workaround"
-      - "Fixed non-initialized firmware fan curve for silent mode (UW)"
-      - "Changed default perf. profile to balanced (UW)"
-      - "Added XP14 to perf. profile workaround"
-      - "Fix broken brightness key reaction for ite_829x"
-      - "Attempt to fix ite_829x instability sometimes locking up kernel on"
-      - "Fixed clevo keyboard init order"
-      - "Added Aura perf. profile workaround"
-      - "Added device 048d:6004 to ite_8291"
-      - "Added device support (Trinity)"
-      - "Fixed uw fan ramp up issues to some extent (workaround)"
-      - "Changed structure of clevo interfaces"
-      - "Added separate clevo-wmi module with existing functionality"
-      - Added clevo-acpi module with implementation of the "new" clevo ACPI
-      - "Added tuxedo-io module (former tuxedo-cc-wmi) into package"
-      - "Added initial support for ITE Device(8291) ->  048d:ce00"
-      - "Added device support (XMG Fusion)"
-      - "Added uniwill lightbar driver (with led_classdev interface)"
-      - "Added uniwill keymapping brightness up/down"
-      - "Fixed uniwill touchpad toggle (some platforms)"
-      - "Fixed module cleanup crash"
-      - "Added initial (very basic) support for 048d:8297 LED controller"
-      - "Fixed key mapping toggle <=> switch mode"
-      - "Default color to white"
-      - "Initial experimental release"
-      - "Added uw kbd color backlight support"
-      - "Restructure to allow for more devices"
-      - "Added device support"
-      - "Added rudimentary device detection"
-      - "Added rfkill key event"
-      - "Fix volume button events, ignore"
-      - "General key event mapping support"
-      - "Events added for backlight and touchpad"
-      - "Fix not restoring state on resume"
-      - "Fix module autoload issues"
-      - "Add standard config tuxedo_keyboard.conf to package"
-      - "First version of the ITE keyboard backlight driver"
-      - "Has support for ITE Device(829x) ->  0x048d:0x8910"
-      - "New packaging"
+      - "Merge tuxedo-keyboard and tuxedo-keyboard-ite as tuxedo-drivers"
