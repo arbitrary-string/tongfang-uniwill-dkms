@@ -184,6 +184,11 @@ pkg_scripts:
         rm -rf /usr/src/tuxedo-drivers-4.21.2
 
 changelog:
+  - version: "4.23.0"
+    author: "Werner Sembach"
+    date: 2026-08-28 01:06:00
+    entries:
+      - "Fix NB02 keyboard backlight for kernel >= 7.2"
   - version: "4.22.3"
     author: "Werner Sembach"
     date: 2026-06-17 16:37:00
