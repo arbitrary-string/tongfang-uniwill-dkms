@@ -216,6 +216,14 @@ static const struct dmi_system_id tuxedo_dmi_string_match[] = {
 			DMI_MATCH(DMI_CHASSIS_VENDOR, "TUXEDO"),
 		},
 	},
+	/* LOCAL-ONLY TEST PATCH - do not upstream: exploratory bring-up of
+	 * this driver package on a TongFang GX4MRXL, untested by TUXEDO. */
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "TongFang"),
+			DMI_MATCH(DMI_BOARD_NAME, "GX4MRXL"),
+		},
+	},
 	{ }
 };
 

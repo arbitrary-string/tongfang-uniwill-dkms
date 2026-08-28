@@ -279,6 +279,15 @@ static const struct dmi_system_id kbl_type_fixed_color_5_levels[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "XxAR4NAx"),
 		},
 	},
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same barebone family as
+	 * TUXEDO's "GXxMRXx" template match above, but this OEM's firmware
+	 * reports the literal (non-templated) board name instead. */
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "TongFang"),
+			DMI_MATCH(DMI_BOARD_NAME, "GX4MRXL"),
+		},
+	},
 	{ }
 };
 
