@@ -982,7 +982,18 @@ static int is_auto_boot_and_powershare_supported(bool *status)
 		  dmi_match(DMI_BOARD_NAME, "GM5IXxA") ||
 
 		  // InfinityBook Max Gen10
-		  dmi_match(DMI_BOARD_NAME, "X5KK45xS_X5SP45xS");
+		  dmi_match(DMI_BOARD_NAME, "X5KK45xS_X5SP45xS") ||
+
+		  /* LOCAL-ONLY TEST PATCH - do not upstream: Eluktronics
+		   * Hydroc 16 G1, same underlying chassis as a Stellaris 16
+		   * Gen6 (see other local patches in this fork), matched on
+		   * its own real SYS_VENDOR/BOARD_NAME since its DMI carries
+		   * no TUXEDO/Stellaris trace. Low risk: no EC auto-detect
+		   * exists for this feature on any board (see comment above
+		   * this function), so this is a guess either way, but a
+		   * wrong guess here just means an inert sysfs toggle. */
+		  (dmi_match(DMI_SYS_VENDOR, "ELUKTRONICS") &&
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com"));
 
 	return 0;
 }
