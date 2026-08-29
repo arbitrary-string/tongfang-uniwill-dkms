@@ -1771,6 +1771,21 @@ struct uniwill_device_features_t *uniwill_get_device_features(void)
 		|| dmi_match(DMI_BOARD_NAME, "X6KK45xU_X6SP45xU")
 		|| dmi_match(DMI_BOARD_NAME, "X6AR55xU")
 		|| dmi_match(DMI_BOARD_NAME, "X5AR45xS")
+		/* LOCAL-ONLY TEST PATCH - do not upstream: Eluktronics Hydroc 16 G1,
+		 * matched on its own real SYS_VENDOR/BOARD_NAME since its DMI has no
+		 * TUXEDO/Stellaris trace. Empirically confirmed that the
+		 * charging_profile EC write (0x07a6) succeeds and reads back
+		 * correctly but has no effect on real physical charging behavior
+		 * (charge_full never reduced, charge_now exceeded 80% of
+		 * charge_full_design under 'stationary') - hypothesis is that this
+		 * board, like STELLARIS16I06 above, needs custom profile mode
+		 * re-asserted (UNIWILL_OSD_DC_ADAPTER_CHANGE handler calls
+		 * uniwill_set_custom_profile_mode() before re-applying the charging
+		 * profile, which is a no-op unless this flag is set) for the EC to
+		 * actually honor it. Re-verify suspend/resume after enabling this -
+		 * it also touches the suspend/resume EC path. */
+		|| (dmi_match(DMI_SYS_VENDOR, "ELUKTRONICS") &&
+		    dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com"))
 #endif
 	;
 
