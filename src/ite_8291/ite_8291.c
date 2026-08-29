@@ -215,6 +215,36 @@ static void color_scaling(struct hid_device *hdev, u8 *red, u8 *green, u8 *blue,
 			*red = (148 * *red) / 255;
 			*blue = (137 * *blue) / 255;
 		}
+	/* LOCAL-ONLY TEST PATCH - do not upstream: Eluktronics Hydroc 16 G1
+	 * (ELUKTRONICS / "HYDROC-16 powered by premamod.com"), same real
+	 * hdev->product (0x600b) as TUXEDO's STELLSL15I06/STELLARIS16I06
+	 * quirk above, and empirically confirmed to need it: setting all
+	 * keys to nominal white (255,255,255) at full brightness showed a
+	 * visible magenta/pink tint on the physical keyboard, the exact
+	 * artifact this correction curve exists to cancel. This unit's own
+	 * DMI has no TUXEDO/Stellaris trace, so match on its real
+	 * SYS_VENDOR/BOARD_NAME instead and reuse the same correction
+	 * values verified above (unlike the TDP-table patch, this is a
+	 * cosmetic-only color correction, not a power/safety-relevant
+	 * value). */
+	} else if (dmi_match(DMI_SYS_VENDOR, "ELUKTRONICS") &&
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com") &&
+		   hdev->product == 0x600b) {
+		// all keys: reduce pink
+		*red = (155 * *red) / 255;
+		*blue = (140 * *blue) / 255;
+
+		// bottom row: reduce green (adding red and blue)
+		if (row_col_set && row == 0) {
+			*red = (279 * *red) / 255;
+			*blue = (282 * *blue) / 255;
+		}
+
+		// top row: reduce violett
+		if(row_col_set && row == 5) {
+			*red = (148 * *red) / 255;
+			*blue = (137 * *blue) / 255;
+		}
 	} else if ((dmi_match(DMI_PRODUCT_SKU, "STELLARIS16I07") ||
 		    dmi_match(DMI_PRODUCT_SKU, "STELLARIS16A07") ||
 		    dmi_match(DMI_BOARD_NAME, "X6AR55xU"))
