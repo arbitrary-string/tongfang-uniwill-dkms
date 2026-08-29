@@ -224,6 +224,18 @@ static const struct dmi_system_id tuxedo_dmi_string_match[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "GX4MRXL"),
 		},
 	},
+	/* LOCAL-ONLY TEST PATCH - do not upstream: exploratory bring-up of
+	 * this driver package on an Eluktronics Hydroc 16 G1, untested by
+	 * TUXEDO. DMI_BOARD_NAME on this unit is the literal string
+	 * "HYDROC-16 powered by premamod.com"; DMI_MATCH is a substring
+	 * match so "HYDROC-16" alone is sufficient and avoids embedding
+	 * the odd trailing vendor string in a match rule. */
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "ELUKTRONICS"),
+			DMI_MATCH(DMI_BOARD_NAME, "HYDROC-16"),
+		},
+	},
 	{ }
 };
 
