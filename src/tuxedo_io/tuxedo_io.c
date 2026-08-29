@@ -228,6 +228,22 @@ static void uw_id_tdp(void)
 		   dmi_match(DMI_BOARD_NAME, "GM6IXxB_MB2")) {
 		tdp_min_defs = tdp_min_gmxixxb_mb2;
 		tdp_max_defs = tdp_max_gmxixxb_mb2;
+	/* LOCAL-ONLY TEST PATCH - do not upstream: Eluktronics Hydroc 16 G1
+	 * (ELUKTRONICS / HYDROC-16), reported by the owner to be the same
+	 * underlying chassis as a TUXEDO Stellaris 16 Gen6 (STELLARIS16I06),
+	 * but this unit's own DMI strings carry no TUXEDO/Stellaris trace at
+	 * all, so it can't be matched via its real SKU/board name. There are
+	 * two known Stellaris 16 Gen6 motherboard revisions (GM6IXxB_MB1 /
+	 * GM6IXxB_MB2) with different TDP ceilings (205/205/400 vs
+	 * 160/160/250) and no independent way yet to tell which revision
+	 * this unit actually is - deliberately using the MB2 (lower) table
+	 * as the more conservative guess pending real verification. Treat
+	 * this as unverified; do not trust these limits without confirming
+	 * with a real, sustained power/thermal test. */
+	} else if (dmi_match(DMI_SYS_VENDOR, "ELUKTRONICS") &&
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com")) {
+		tdp_min_defs = tdp_min_gmxixxb_mb2;
+		tdp_max_defs = tdp_max_gmxixxb_mb2;
 	} else if (dmi_match(DMI_PRODUCT_SKU, "STELLARIS17I06")) {
 		tdp_min_defs = tdp_min_gmxixxn;
 		tdp_max_defs = tdp_max_gmxixxn;
