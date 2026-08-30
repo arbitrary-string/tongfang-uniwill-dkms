@@ -245,6 +245,30 @@ static void color_scaling(struct hid_device *hdev, u8 *red, u8 *green, u8 *blue,
 			*red = (148 * *red) / 255;
 			*blue = (137 * *blue) / 255;
 		}
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit/keyboard
+	 * panel as the ELUKTRONICS entry above (hdev->product is a real USB
+	 * device ID, unaffected by any firmware/BIOS update), after an
+	 * XMG-branded firmware update changed this unit's DMI strings.
+	 * Reusing the identical, already-empirically-verified correction
+	 * curve, just matched against the new DMI values. */
+	} else if (dmi_match(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH") &&
+		   dmi_match(DMI_BOARD_NAME, "GM7IXxN") &&
+		   hdev->product == 0x600b) {
+		// all keys: reduce pink
+		*red = (155 * *red) / 255;
+		*blue = (140 * *blue) / 255;
+
+		// bottom row: reduce green (adding red and blue)
+		if (row_col_set && row == 0) {
+			*red = (279 * *red) / 255;
+			*blue = (282 * *blue) / 255;
+		}
+
+		// top row: reduce violett
+		if(row_col_set && row == 5) {
+			*red = (148 * *red) / 255;
+			*blue = (137 * *blue) / 255;
+		}
 	} else if ((dmi_match(DMI_PRODUCT_SKU, "STELLARIS16I07") ||
 		    dmi_match(DMI_PRODUCT_SKU, "STELLARIS16A07") ||
 		    dmi_match(DMI_BOARD_NAME, "X6AR55xU"))

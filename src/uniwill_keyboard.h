@@ -1786,6 +1786,15 @@ struct uniwill_device_features_t *uniwill_get_device_features(void)
 		 * it also touches the suspend/resume EC path. */
 		|| (dmi_match(DMI_SYS_VENDOR, "ELUKTRONICS") &&
 		    dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com"))
+		/* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit as
+		 * the ELUKTRONICS entry above, after an XMG-branded firmware
+		 * update changed this unit's DMI strings. Kept for consistency
+		 * with the prior firmware's setup, even though testing found
+		 * this flag made no difference to the (still broken) charging
+		 * cap - it may still matter for other things it gates
+		 * (suspend/resume EC path, TDP/fan curve mode). */
+		|| (dmi_match(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH") &&
+		    dmi_match(DMI_BOARD_NAME, "GM7IXxN"))
 #endif
 	;
 

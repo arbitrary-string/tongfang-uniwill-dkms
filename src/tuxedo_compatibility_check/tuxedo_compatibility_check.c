@@ -236,6 +236,23 @@ static const struct dmi_system_id tuxedo_dmi_string_match[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "HYDROC-16"),
 		},
 	},
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same physical Eluktronics
+	 * Hydroc 16 G1 as the entry above, after installing an XMG-branded
+	 * BIOS/firmware update (as an interim step while waiting on
+	 * Eluktronics' own official firmware) that reports completely
+	 * different DMI strings: DMI_SYS_VENDOR="SchenkerTechnologiesGmbH"
+	 * (XMG's parent company), DMI_BOARD_NAME="GM7IXxN" (TUXEDO's own
+	 * "Stellaris 17 Gen6" board code - a DIFFERENT, larger chassis
+	 * variant than this unit's confirmed actual GM6IXxB/16" hardware;
+	 * physical keyboard/chassis identity unchanged, only this firmware's
+	 * self-reported identity strings differ from before). Kept alongside
+	 * the ELUKTRONICS entry above in case of reverting firmware. */
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
+			DMI_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
+		},
+	},
 	{ }
 };
 

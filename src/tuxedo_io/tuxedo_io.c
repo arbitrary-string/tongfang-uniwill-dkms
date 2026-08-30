@@ -244,6 +244,26 @@ static void uw_id_tdp(void)
 		   dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com")) {
 		tdp_min_defs = tdp_min_gmxixxb_mb2;
 		tdp_max_defs = tdp_max_gmxixxb_mb2;
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit as the
+	 * ELUKTRONICS entry above, after an XMG-branded firmware update
+	 * changed this unit's DMI to report DMI_BOARD_NAME="GM7IXxN"
+	 * directly (TUXEDO's own "Stellaris 17 Gen6" board code) instead of
+	 * a SKU string. Unlike the MB1-vs-MB2 guess above, this is a direct
+	 * board-name match against TUXEDO's own real, tested table for this
+	 * exact board string (reached normally via the STELLARIS17I06 SKU
+	 * path a few lines below) - just without requiring that SKU string,
+	 * since this unit's actual DMI_PRODUCT_SKU is still
+	 * "XNE16E24 / XNE17E24", not "STELLARIS17I06". Values happen to be
+	 * identical to the MB2 guess above (160/160/250) either way. Still
+	 * worth flagging: this firmware self-identifies as the 17" variant
+	 * while this unit's actual physical hardware (keyboard controller,
+	 * confirmed barebone ID before this firmware update) matches the
+	 * 16" GM6IXxB - these values are TUXEDO's own for the board name
+	 * this firmware claims, not independently re-verified against this
+	 * unit's real physical VRM/cooling design. */
+	} else if (dmi_match(DMI_BOARD_NAME, "GM7IXxN")) {
+		tdp_min_defs = tdp_min_gmxixxn;
+		tdp_max_defs = tdp_max_gmxixxn;
 	} else if (dmi_match(DMI_PRODUCT_SKU, "STELLARIS17I06")) {
 		tdp_min_defs = tdp_min_gmxixxn;
 		tdp_max_defs = tdp_max_gmxixxn;
