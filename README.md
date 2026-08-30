@@ -1,6 +1,6 @@
 # Table of Content
 - <a href="#description">Description</a>
-- <a href="#eluktronics-hydroc-16-g1-fork">Eluktronics Hydroc 16 G1 fork</a>
+- <a href="#tongfang-gm6ixxb-fork-tested-on-eluktronics-hydroc-16-g1">TongFang GM6IXxB fork (tested on: Eluktronics Hydroc 16 G1)</a>
 - <a href="#building-and-install">Building and Install</a>
 - <a href="#troubleshooting">Troubleshooting</a>
 - <a href="#regarding-upstreaming-of-tuxedo-drivers">Regarding upstreaming of tuxedo-drivers</a>
@@ -8,12 +8,21 @@
 # Description
 Drivers for several platform devices for TUXEDO notebooks meant for DKMS.
 
-# Eluktronics Hydroc 16 G1 fork
+# TongFang GM6IXxB fork (tested on: Eluktronics Hydroc 16 G1)
 
 This fork of TUXEDO's `tuxedo-drivers` adds board-specific patches (local DMI matches, not
-upstream-worthy) to bring this driver package up on an **Eluktronics Hydroc 16 G1**, a reseller
-laptop built on the same underlying TongFang **GM6IXxB** chassis TUXEDO sells as the "Stellaris 16
-Gen6" (Intel), unrecognized by this driver out of the box.
+upstream-worthy) for the TongFang **`GM6IXxB`** chassis — the same barebone TUXEDO sells as the
+"Stellaris 16 Gen6" (Intel), unrecognized by this driver out of the box under any other brand.
+It was tested and verified specifically on an **Eluktronics Hydroc 16 G1**, but `GM6IXxB` is a
+TongFang reference design manufactured for many different resellers under many different model
+names — the same underlying hardware, sold rebranded. **If your laptop is a rebrand of this same
+chassis from a different seller (e.g. in the UK, PC Specialist and others resell TongFang/Uniwill
+barebones under their own model names — this repo does not confirm any specific one of those
+sells `GM6IXxB` specifically, so verify your own hardware below rather than assuming from the
+seller's name alone), this may well apply to you too — TUXEDO's own driver already recognizes
+`GM6IXxB` under two of its own real board names (`GM6IXxB_MB1`/`GM6IXxB_MB2`), so if your board
+reports one of those directly, you don't even need this fork's patches — they exist because our
+specific unit's board strings were overwritten by its reseller instead.**
 
 ## Is this the right chassis for your device?
 
@@ -26,13 +35,17 @@ ls /sys/bus/wmi/devices/ | grep -E "ABBC0F"   # Uniwill/WMI GUID block present?
 sudo dmesg | grep -i "EC Barebone ID"          # after loading tuxedo_keyboard with dynamic debug on
 ```
 
-This fork's patches match specifically on `DMI_SYS_VENDOR="ELUKTRONICS"` +
-`DMI_BOARD_NAME` containing `"HYDROC-16"`. If your board reports different strings, these DMI
-matches simply won't activate — you'd need to add your own (see the commit history for the
-pattern used, e.g. `cf4cb77`, `7cc0dff`, `ee045b2`) after independently confirming your own
-chassis identity. Don't assume a shared reseller, model name, or even chassis family guarantees
-identical EC firmware behavior — see the "Known limitations" section below for why that
-assumption failed badly for at least one feature on this exact unit.
+If `board_name` already reports `GM6IXxB_MB1` or `GM6IXxB_MB2` directly, use TUXEDO's own
+upstream `tuxedo-drivers` unmodified — no fork needed. This fork's patches match specifically on
+`DMI_SYS_VENDOR="ELUKTRONICS"` + `DMI_BOARD_NAME` containing `"HYDROC-16"` (this exact reseller's
+overwritten strings). If your board reports different strings but you believe it's the same
+`GM6IXxB` chassis under a different rebrand, these DMI matches won't activate for you as-is — see
+the commit history for the pattern used (e.g. `cf4cb77`, `7cc0dff`, `ee045b2`) to add a matching
+entry for your own board's actual strings, after independently confirming your chassis identity
+(same DMI/WMI/barebone-ID checks above). Don't assume a shared reseller, model name, or even
+chassis family guarantees identical EC firmware behavior — see "Known limitations" below for why
+that assumption failed badly for at least one feature on this exact unit, and may well differ
+again on yours.
 
 ## What's confirmed working (visually verified on real hardware)
 
