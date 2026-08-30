@@ -42,6 +42,12 @@ if [ ! -d "$CLONE_DIR/.git" ]; then
   git clone https://github.com/arbitrary-string/tongfang-uniwill-dkms.git "$CLONE_DIR"
 fi
 cd "$CLONE_DIR"
+# Set local identity immediately, before this clone could ever be committed to -
+# a fresh clone with no local identity set is exactly what caused the original
+# git filter-repo incident (see ONBOARDING.md Section 0). Never rely on a global
+# default; this must be set per-clone.
+git config user.name "arbitrary-string"
+git config user.email "arbitrarystring@gmail.com"
 PKG=tongfang-uniwill-dkms
 VER=$(grep '^PACKAGE_VERSION=' dkms.conf | head -1 | cut -d'"' -f2)
 echo "Package version from dkms.conf: $VER"
