@@ -1,11 +1,80 @@
 # Table of Content
 - <a href="#description">Description</a>
+- <a href="#eluktronics-hydroc-16-g1-fork">Eluktronics Hydroc 16 G1 fork</a>
 - <a href="#building-and-install">Building and Install</a>
 - <a href="#troubleshooting">Troubleshooting</a>
 - <a href="#regarding-upstreaming-of-tuxedo-drivers">Regarding upstreaming of tuxedo-drivers</a>
 
 # Description
 Drivers for several platform devices for TUXEDO notebooks meant for DKMS.
+
+# Eluktronics Hydroc 16 G1 fork
+
+This fork of TUXEDO's `tuxedo-drivers` adds board-specific patches (local DMI matches, not
+upstream-worthy) to bring this driver package up on an **Eluktronics Hydroc 16 G1**, a reseller
+laptop built on the same underlying TongFang **GM6IXxB** chassis TUXEDO sells as the "Stellaris 16
+Gen6" (Intel), unrecognized by this driver out of the box.
+
+## Is this the right chassis for your device?
+
+Before using any of this, confirm your hardware actually matches, rather than assuming from a
+similar model name or reseller:
+
+```
+cat /sys/class/dmi/id/board_name /sys/class/dmi/id/sys_vendor /sys/class/dmi/id/product_name
+ls /sys/bus/wmi/devices/ | grep -E "ABBC0F"   # Uniwill/WMI GUID block present?
+sudo dmesg | grep -i "EC Barebone ID"          # after loading tuxedo_keyboard with dynamic debug on
+```
+
+This fork's patches match specifically on `DMI_SYS_VENDOR="ELUKTRONICS"` +
+`DMI_BOARD_NAME` containing `"HYDROC-16"`. If your board reports different strings, these DMI
+matches simply won't activate — you'd need to add your own (see the commit history for the
+pattern used, e.g. `cf4cb77`, `7cc0dff`, `ee045b2`) after independently confirming your own
+chassis identity. Don't assume a shared reseller, model name, or even chassis family guarantees
+identical EC firmware behavior — see the "Known limitations" section below for why that
+assumption failed badly for at least one feature on this exact unit.
+
+## What's confirmed working (visually verified on real hardware)
+
+- Per-key RGB keyboard backlight (126 individually-addressable keys) and light bar, via the
+  ITE8291/ITE8233 USB controllers (`ite_8291`/`ite_8291_lb`) — including a color-calibration fix
+  for a real, visible magenta tint on this panel.
+- TUXEDO Control Center (TCC) integration — fan control, keyboard backlight, TDP presets.
+- `ac_auto_boot`/`usb_powershare` toggles (present and EC-backed; real-world on/off behavior not
+  further tested).
+- Suspend/resume (s2idle) — clean, verified multiple times.
+
+## Known limitations — read before relying on this for battery health
+
+**The "Stationary"/"Balanced" battery charging-profile feature does not actually cap charging on
+this unit.** The relevant EC register accepts writes and reads back correctly (confirmed via two
+independent open-source drivers using the identical register/encoding, and cross-checked against
+genuine Eluktronics Windows software persisting the same register across a reboot into Linux), but
+the physical charging current never throttles — verified via `current_now` across multiple full
+charge cycles, well past the intended threshold. This appears to be a real EC-firmware-level gap,
+not a bug in this driver, and matches an open, unresolved bug report against TUXEDO's own
+Stellaris hardware plus an explicit "some devices do not properly implement the charging threshold
+interface" caveat documented by the independent `uniwill-laptop` driver
+(https://github.com/Wer-Wolf/uniwill-laptop). If you need a hard charge limit, don't rely on this
+feature — manually unplug around your target percentage instead.
+
+The TDP/power-limit table (matched to TUXEDO's `GM6IXxB_MB2` motherboard revision) is an
+unverified, deliberately conservative guess — this unit's actual revision (`MB1` vs `MB2`) was
+never conclusively determined, and no sustained thermal/power test has confirmed the chosen
+values are correct for this specific board.
+
+## Installing
+
+`install-hydroc16-g1.sh` (in the repo root) reproduces a full setup on a fresh Ubuntu 26.04
+("resolute") install: build prerequisites, a permanent apt pin blocking TUXEDO's stock
+`tuxedo-drivers` package (would silently conflict with this fork's modules), this fork built and
+installed via DKMS, and TUXEDO Control Center installed from a pinned, independently-archived
+binary release (not TUXEDO's live apt repo, to stay isolated from any future unreviewed TCC
+update) — see `arbitrary-string/tuxedo-control-center-archive` for that archive and its source
+mirror. Run it, then reboot to confirm the driver autoloads cleanly from a cold boot.
+
+This has been tested end-to-end, including a full simulated fresh-machine run (not just written
+and assumed correct).
 
 ## Features implemented by this driver package
 - Fn-keys

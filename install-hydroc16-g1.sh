@@ -14,8 +14,8 @@
 #      installing either.
 #
 # This is a personal reinstall script for this exact machine/board, not a generic
-# installer — re-verify hardware identity (see ONBOARDING.md Step 1) before running
-# this on any other machine.
+# installer — re-verify hardware identity (see the "Eluktronics Hydroc 16 G1" section
+# of README.md) before running this on any other machine.
 set -euo pipefail
 
 TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center-archive/releases/download/v3.0.9-verified"
@@ -43,9 +43,9 @@ if [ ! -d "$CLONE_DIR/.git" ]; then
 fi
 cd "$CLONE_DIR"
 # Set local identity immediately, before this clone could ever be committed to -
-# a fresh clone with no local identity set is exactly what caused the original
-# git filter-repo incident (see ONBOARDING.md Section 0). Never rely on a global
-# default; this must be set per-clone.
+# a fresh clone with no local identity set is how a prior clone once inherited
+# an unrelated real-name identity, publicly linking a personal project to it.
+# Never rely on a global default; this must be set per-clone.
 git config user.name "arbitrary-string"
 git config user.email "arbitrarystring@gmail.com"
 PKG=tongfang-uniwill-dkms
