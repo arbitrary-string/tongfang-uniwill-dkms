@@ -1,0 +1,12 @@
+[Unit]
+Description=Ensure tongfang-uniwill-dkms driver chain loaded correctly (cold-boot autoload workaround)
+After=systemd-udevd.service
+Before=tccd.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/tongfang-uniwill-reload-if-needed.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

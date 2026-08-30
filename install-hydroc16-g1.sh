@@ -82,7 +82,20 @@ sudo apt-get install -y libayatana-appindicator3-1
 sudo dpkg -i "$TMPDIR/$PLACEHOLDER_DEB"
 sudo dpkg -i --ignore-depends=tuxedo-drivers,tuxedo-keyboard "$TMPDIR/$TCC_DEB"
 
-echo "== Step 5: sanity checks =="
+echo "== Step 5: install cold-boot autoload workaround =="
+# Real, observed bug: tuxedo_compatibility_check sometimes loads in a bad/stale
+# state very early in boot (likely repeated near-simultaneous WMI-device uevents
+# each triggering their own modprobe attempt), causing tuxedo_keyboard/uniwill_wmi/
+# tuxedo_io to fail to load at all despite a correct DMI match. This service checks
+# after boot and does one clean reload of the chain only if it's actually needed -
+# a no-op on a boot where autoload already worked correctly.
+sudo cp "$CLONE_DIR/tongfang-uniwill-reload-if-needed.sh" /usr/local/sbin/tongfang-uniwill-reload-if-needed.sh
+sudo chmod +x /usr/local/sbin/tongfang-uniwill-reload-if-needed.sh
+sudo cp "$CLONE_DIR/tongfang-uniwill-reload.service" /etc/systemd/system/tongfang-uniwill-reload.service
+sudo systemctl daemon-reload
+sudo systemctl enable tongfang-uniwill-reload.service
+
+echo "== Step 6: sanity checks =="
 sudo dpkg --audit
 sudo apt-get check
 sudo systemctl status tccd --no-pager || true
