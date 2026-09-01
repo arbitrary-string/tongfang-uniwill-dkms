@@ -993,7 +993,16 @@ static int is_auto_boot_and_powershare_supported(bool *status)
 		   * this function), so this is a guess either way, but a
 		   * wrong guess here just means an inert sysfs toggle. */
 		  (dmi_match(DMI_SYS_VENDOR, "ELUKTRONICS") &&
-		   dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com"));
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16 powered by premamod.com")) ||
+
+		  /* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit as
+		   * the ELUKTRONICS entry above, after installing Eluktronics' own
+		   * official firmware, which reports DMI_SYS_VENDOR=
+		   * "Eluktronics Inc." and DMI_BOARD_NAME="HYDROC-16" (differs in
+		   * case/suffix from the original ELUKTRONICS strings; dmi_match()
+		   * is an exact match so either difference alone breaks it). */
+		  (dmi_match(DMI_SYS_VENDOR, "Eluktronics Inc.") &&
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16"));
 
 	return 0;
 }
@@ -1795,6 +1804,16 @@ struct uniwill_device_features_t *uniwill_get_device_features(void)
 		 * (suspend/resume EC path, TDP/fan curve mode). */
 		|| (dmi_match(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH") &&
 		    dmi_match(DMI_BOARD_NAME, "GM7IXxN"))
+		/* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit as
+		 * the ELUKTRONICS entry above, after installing Eluktronics' own
+		 * official firmware, which reports DMI_SYS_VENDOR=
+		 * "Eluktronics Inc." and DMI_BOARD_NAME="HYDROC-16" (differs in
+		 * case/suffix from the original ELUKTRONICS strings, breaking the
+		 * exact match). Kept for consistency with prior firmware's setup;
+		 * charging cap is still broken under this firmware too (see
+		 * ONBOARDING.md section 10). */
+		|| (dmi_match(DMI_SYS_VENDOR, "Eluktronics Inc.") &&
+		    dmi_match(DMI_BOARD_NAME, "HYDROC-16"))
 #endif
 	;
 

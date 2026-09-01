@@ -253,6 +253,23 @@ static const struct dmi_system_id tuxedo_dmi_string_match[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "GM7IXxN"),
 		},
 	},
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same physical Eluktronics
+	 * Hydroc 16 G1 as the two entries above, after installing Eluktronics'
+	 * own official firmware (received from their support after the XMG
+	 * interim firmware above). This firmware reports DMI_SYS_VENDOR=
+	 * "Eluktronics Inc." - different case and suffix than the original
+	 * "ELUKTRONICS" factory string, which broke the case-sensitive
+	 * DMI_MATCH substring match - and DMI_BOARD_NAME="HYDROC-16" (same
+	 * substring as before, just without the "powered by premamod.com"
+	 * suffix, which itself is already covered by the original entry's
+	 * substring match). Kept alongside all prior entries in case of
+	 * reverting firmware. */
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "Eluktronics"),
+			DMI_MATCH(DMI_BOARD_NAME, "HYDROC-16"),
+		},
+	},
 	{ }
 };
 

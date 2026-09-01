@@ -269,6 +269,30 @@ static void color_scaling(struct hid_device *hdev, u8 *red, u8 *green, u8 *blue,
 			*red = (148 * *red) / 255;
 			*blue = (137 * *blue) / 255;
 		}
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit/keyboard
+	 * panel as the ELUKTRONICS entry above, after installing Eluktronics'
+	 * own official firmware, which reports DMI_SYS_VENDOR=
+	 * "Eluktronics Inc." and DMI_BOARD_NAME="HYDROC-16" (differs in
+	 * case/suffix from the original ELUKTRONICS strings, breaking the
+	 * exact match). Reusing the identical correction curve. */
+	} else if (dmi_match(DMI_SYS_VENDOR, "Eluktronics Inc.") &&
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16") &&
+		   hdev->product == 0x600b) {
+		// all keys: reduce pink
+		*red = (155 * *red) / 255;
+		*blue = (140 * *blue) / 255;
+
+		// bottom row: reduce green (adding red and blue)
+		if (row_col_set && row == 0) {
+			*red = (279 * *red) / 255;
+			*blue = (282 * *blue) / 255;
+		}
+
+		// top row: reduce violett
+		if(row_col_set && row == 5) {
+			*red = (148 * *red) / 255;
+			*blue = (137 * *blue) / 255;
+		}
 	} else if ((dmi_match(DMI_PRODUCT_SKU, "STELLARIS16I07") ||
 		    dmi_match(DMI_PRODUCT_SKU, "STELLARIS16A07") ||
 		    dmi_match(DMI_BOARD_NAME, "X6AR55xU"))

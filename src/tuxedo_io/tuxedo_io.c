@@ -264,6 +264,20 @@ static void uw_id_tdp(void)
 	} else if (dmi_match(DMI_BOARD_NAME, "GM7IXxN")) {
 		tdp_min_defs = tdp_min_gmxixxn;
 		tdp_max_defs = tdp_max_gmxixxn;
+	/* LOCAL-ONLY TEST PATCH - do not upstream: same physical unit as the
+	 * ELUKTRONICS entry above, after installing Eluktronics' own official
+	 * firmware (received from their support after the XMG interim
+	 * firmware above). This firmware reports DMI_SYS_VENDOR=
+	 * "Eluktronics Inc." (different case/suffix than the original
+	 * "ELUKTRONICS" string - dmi_match() is an exact match, so the case
+	 * difference broke the match) and DMI_BOARD_NAME="HYDROC-16" (same
+	 * string as before minus the "powered by premamod.com" suffix, which
+	 * dmi_match() also requires exactly, so that alone would have broken
+	 * it too). Same unverified MB2 TDP guess as the ELUKTRONICS entry. */
+	} else if (dmi_match(DMI_SYS_VENDOR, "Eluktronics Inc.") &&
+		   dmi_match(DMI_BOARD_NAME, "HYDROC-16")) {
+		tdp_min_defs = tdp_min_gmxixxb_mb2;
+		tdp_max_defs = tdp_max_gmxixxb_mb2;
 	} else if (dmi_match(DMI_PRODUCT_SKU, "STELLARIS17I06")) {
 		tdp_min_defs = tdp_min_gmxixxn;
 		tdp_max_defs = tdp_max_gmxixxn;
