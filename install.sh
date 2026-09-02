@@ -132,20 +132,39 @@ sudo dkms install -m "$PKG" -v "$VER" --force
 sudo depmod -a
 
 echo "== Step 4: load the driver chain and confirm it actually came up =="
-for m in tuxedo_io uniwill_wmi clevo_wmi tuxedo_nb02_nvidia_power_ctrl tuxedo_keyboard tuxedo_compatibility_check; do
-	sudo rmmod "$m" 2>/dev/null || true
+# Retried, not a single attempt: empirically observed during testing on 2026-09-02 that even a
+# live reload right after a successful DKMS install can transiently fail the very next check
+# (dmesg showed one clean "tuxedo_keyboard: module init" with no errors, yet the immediately
+# following `lsmod` check missed it - module was confirmed loaded moments later) - the same
+# class of flakiness tongfang-uniwill-reload.service exists to paper over at boot, just hit
+# here during the script's own reload instead. Same retry shape as
+# tongfang-uniwill-reload-if-needed.sh: full clean rmmod+modprobe cycle, up to 3 attempts.
+attempt=1
+max_attempts=3
+loaded=false
+while [ "$attempt" -le "$max_attempts" ]; do
+	for m in tuxedo_io uniwill_wmi clevo_wmi tuxedo_nb02_nvidia_power_ctrl tuxedo_keyboard tuxedo_compatibility_check; do
+		sudo rmmod "$m" 2>/dev/null || true
+	done
+	sudo modprobe tuxedo_compatibility_check || true
+	sudo modprobe tuxedo_keyboard || true
+	sudo modprobe uniwill_wmi || true
+	sudo modprobe tuxedo_io || true
+
+	if lsmod | grep -q '^tuxedo_keyboard '; then
+		loaded=true
+		break
+	fi
+	attempt=$((attempt + 1))
+	sleep 1
 done
-sudo modprobe tuxedo_compatibility_check
-sudo modprobe tuxedo_keyboard
-sudo modprobe uniwill_wmi
-sudo modprobe tuxedo_io
 sudo modprobe ite_8291 2>/dev/null || true
 sudo modprobe ite_8291_lb 2>/dev/null || true
 
-if ! lsmod | grep -q '^tuxedo_keyboard '; then
-	echo "ERROR: tuxedo_keyboard failed to load - this hardware's DMI identity is not accepted"
-	echo "by tuxedo_compatibility_check. Stopping before installing TCC (it would have nothing"
-	echo "to talk to)."
+if [ "$loaded" != true ]; then
+	echo "ERROR: tuxedo_keyboard failed to load after $max_attempts attempts - this hardware's"
+	echo "DMI identity is not accepted by tuxedo_compatibility_check. Stopping before installing"
+	echo "TCC (it would have nothing to talk to)."
 	exit 1
 fi
 
