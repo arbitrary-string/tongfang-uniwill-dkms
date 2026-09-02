@@ -11,11 +11,14 @@
 #      silently conflict with this fork's patched kernel modules (same module basenames).
 #   3. This fork (with all local per-board patches) built and installed via DKMS, then loaded.
 #   4. The cold-boot autoload race workaround (tongfang-uniwill-reload.service).
-#   5. TUXEDO Control Center (TCC), installed from OUR OWN verified-binary archive
-#      (arbitrary-string/tuxedo-control-center-archive), not TUXEDO's live apt repo - avoids
-#      any risk of a silent future TCC update changing behavior or adding compatibility checks
-#      against this fork. A local placeholder package satisfies TCC's
-#      tuxedo-drivers/tuxedo-keyboard dependency without installing either.
+#   5. TUXEDO Control Center (TCC), installed from a release build of OUR OWN active fork
+#      (arbitrary-string/tuxedo-control-center - a real development fork, not the disaster-
+#      recovery mirror at arbitrary-string/tuxedo-control-center-archive), not TUXEDO's live
+#      apt repo - avoids any risk of a silent future TCC update changing behavior or adding
+#      compatibility checks against this fork, and adds this fork's own features (currently:
+#      lightbar color/brightness control, which stock TCC doesn't have at all). A local
+#      placeholder package satisfies TCC's tuxedo-drivers/tuxedo-keyboard dependency without
+#      installing either.
 #
 # Safe to re-run: each step either no-ops or cleanly replaces its own prior result.
 #
@@ -25,8 +28,8 @@
 # through. See README.md / ONBOARDING.md for how to add support for a new board first.
 set -euo pipefail
 
-TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center-archive/releases/download/v3.0.9-verified"
-TCC_DEB="tuxedo-control-center_3.0.9_amd64.deb"
+TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center/releases/download/v3.0.9-lightbar.1"
+TCC_DEB="tuxedo-control-center_3.0.9-lightbar.1.deb"
 PLACEHOLDER_DEB="tuxedo-keyboard-placeholder_4.0.0_all.deb"
 
 confirm_or_exit() {
