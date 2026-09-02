@@ -138,9 +138,14 @@ echo "== Step 4: load the driver chain and confirm it actually came up =="
 # following `lsmod` check missed it - module was confirmed loaded moments later) - the same
 # class of flakiness tongfang-uniwill-reload.service exists to paper over at boot, just hit
 # here during the script's own reload instead. Same retry shape as
-# tongfang-uniwill-reload-if-needed.sh: full clean rmmod+modprobe cycle, up to 3 attempts.
+# tongfang-uniwill-reload-if-needed.sh: full clean rmmod+modprobe cycle, up to 5 attempts.
+# Also settle briefly before checking: testing showed dmesg confirming a clean module init with
+# no errors, immediately followed by the lsmod check missing it anyway - checking with zero
+# delay after modprobe returns isn't reliable here, whatever the underlying cause (root cause
+# not fully identified - no competing udev rule found, `udevadm settle` alone didn't explain
+# it either - but a short sleep before checking reliably reflects the true settled state).
 attempt=1
-max_attempts=3
+max_attempts=5
 loaded=false
 while [ "$attempt" -le "$max_attempts" ]; do
 	for m in tuxedo_io uniwill_wmi clevo_wmi tuxedo_nb02_nvidia_power_ctrl tuxedo_keyboard tuxedo_compatibility_check; do
@@ -150,13 +155,14 @@ while [ "$attempt" -le "$max_attempts" ]; do
 	sudo modprobe tuxedo_keyboard || true
 	sudo modprobe uniwill_wmi || true
 	sudo modprobe tuxedo_io || true
+	sudo udevadm settle --timeout=5 || true
+	sleep 2
 
 	if lsmod | grep -q '^tuxedo_keyboard '; then
 		loaded=true
 		break
 	fi
 	attempt=$((attempt + 1))
-	sleep 1
 done
 sudo modprobe ite_8291 2>/dev/null || true
 sudo modprobe ite_8291_lb 2>/dev/null || true
