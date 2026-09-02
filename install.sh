@@ -169,7 +169,8 @@ echo "== Step 6: install TUXEDO Control Center from our own verified archive =="
 # switching the pin here.
 sudo apt-get install -y libayatana-appindicator3-1
 
-if dpkg -s tuxedo-control-center > /dev/null 2>&1; then
+TCC_STATUS=$(dpkg-query -W -f='${Status}' tuxedo-control-center 2>/dev/null || true)
+if [ "$TCC_STATUS" = "install ok installed" ]; then
 	echo "tuxedo-control-center already installed, skipping download/install."
 else
 	DOWNLOAD_DIR="${TCC_DOWNLOAD_DIR:-$(dirname "$REPO_DIR")/tcc-install-cache}"
@@ -179,8 +180,10 @@ else
 
 	# Placeholder first, so TCC's tuxedo-drivers|tuxedo-keyboard alternative is already
 	# satisfied by the time dpkg processes TCC's own dependency check.
-	dpkg -s tuxedo-keyboard-placeholder > /dev/null 2>&1 \
-		|| sudo dpkg -i "$DOWNLOAD_DIR/$PLACEHOLDER_DEB"
+	PLACEHOLDER_STATUS=$(dpkg-query -W -f='${Status}' tuxedo-keyboard-placeholder 2>/dev/null || true)
+	if [ "$PLACEHOLDER_STATUS" != "install ok installed" ]; then
+		sudo dpkg -i "$DOWNLOAD_DIR/$PLACEHOLDER_DEB"
+	fi
 	sudo dpkg -i --ignore-depends=tuxedo-drivers,tuxedo-keyboard "$DOWNLOAD_DIR/$TCC_DEB"
 fi
 
