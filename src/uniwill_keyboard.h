@@ -1814,6 +1814,18 @@ struct uniwill_device_features_t *uniwill_get_device_features(void)
 		 * ONBOARDING.md section 10). */
 		|| (dmi_match(DMI_SYS_VENDOR, "Eluktronics Inc.") &&
 		    dmi_match(DMI_BOARD_NAME, "HYDROC-16"))
+		/* LOCAL-ONLY TEST PATCH - do not upstream: XMG NEO 16 (E25).
+		 * DMI_BOARD_NAME="X6AR5xxY" is TUXEDO's own native board code
+		 * for this exact chassis (Stellaris 16 Gen7), already listed
+		 * a few lines above under STELLARIS16I07/STELLARIS16A07 - but
+		 * this unit's own DMI_PRODUCT_SKU is "XNE16E25", not
+		 * "STELLARIS16I07", so that SKU match never fires. Direct
+		 * board-name match instead, same pattern as X6AR55xU/X5AR45xS
+		 * above. Re-verify suspend/resume and charging-profile
+		 * behavior after enabling this, per the same caveats noted on
+		 * the Hydroc entries above. */
+		|| dmi_match(DMI_BOARD_NAME, "X6AR5xxY")
+		|| dmi_match(DMI_BOARD_NAME, "X6AR5xxY_mLED")
 #endif
 	;
 

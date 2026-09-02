@@ -300,6 +300,22 @@ static void color_scaling(struct hid_device *hdev, u8 *red, u8 *green, u8 *blue,
 		// all keys: reduce pink
 		*red = (170 * *red) / 255;
 		*blue = (125 * *blue) / 255;
+	/* LOCAL-ONLY TEST PATCH - do not upstream: XMG NEO 16 (E25)
+	 * (SchenkerTechnologiesGmbH / X6AR5xxY), same real hdev->product
+	 * (0x600b) as TUXEDO's STELLARIS16I07/X6AR55xU quirk above. UNVERIFIED:
+	 * tentatively reusing that curve since X6AR5xxY and X6AR55xU are
+	 * TUXEDO's own board codes for closely related Stellaris 16 Gen7
+	 * boards, but this has NOT been visually confirmed against this
+	 * unit's actual physical keyboard the way the Hydroc 16 G1 curve
+	 * was (see the ELUKTRONICS entry further above for that empirical
+	 * process) - set all keys to nominal white at full brightness and
+	 * check for a visible color tint before trusting this. */
+	} else if (dmi_match(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH") &&
+		   dmi_match(DMI_BOARD_NAME, "X6AR5xxY") &&
+		   hdev->product == 0x600b) {
+		// all keys: reduce pink (UNVERIFIED - see comment above)
+		*red = (170 * *red) / 255;
+		*blue = (125 * *blue) / 255;
 	} else if (dmi_match(DMI_BOARD_NAME, "X5KK45xS_X5SP45xS")) {
 		*red = (180 * *red) / 255;
 	} else if (dmi_match(DMI_BOARD_NAME, "X5AR45xS")) {

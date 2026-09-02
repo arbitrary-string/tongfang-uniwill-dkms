@@ -270,6 +270,24 @@ static const struct dmi_system_id tuxedo_dmi_string_match[] = {
 			DMI_MATCH(DMI_BOARD_NAME, "HYDROC-16"),
 		},
 	},
+	/* LOCAL-ONLY TEST PATCH - do not upstream: exploratory bring-up of
+	 * this driver package on an XMG NEO 16 (E25), untested by TUXEDO.
+	 * DMI_BOARD_NAME on this unit is "X6AR5xxY", which is TUXEDO's own
+	 * native board code for the "Stellaris 16 Gen7" (Intel) chassis -
+	 * already present, unpatched, in this driver's own DMI tables in
+	 * uniwill_keyboard.h and tuxedo_io.c (as part of the STELLARIS16I07
+	 * family) - just under DMI_SYS_VENDOR="SchenkerTechnologiesGmbH"
+	 * (XMG's parent company) instead of "TUXEDO", and reporting
+	 * DMI_PRODUCT_SKU="XNE16E25" instead of "STELLARIS16I07", so none of
+	 * that native support is reachable without this compat-check entry.
+	 * DMI_MATCH is a substring match, so this also covers the
+	 * "X6AR5xxY_mLED" board variant if it turns out to apply. */
+	{
+		.matches = {
+			DMI_MATCH(DMI_SYS_VENDOR, "SchenkerTechnologiesGmbH"),
+			DMI_MATCH(DMI_BOARD_NAME, "X6AR5xxY"),
+		},
+	},
 	{ }
 };
 

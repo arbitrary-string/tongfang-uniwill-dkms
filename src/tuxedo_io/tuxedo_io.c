@@ -305,6 +305,22 @@ static void uw_id_tdp(void)
 	} else if (dmi_match(DMI_BOARD_NAME, "X6KK45xU_X6SP45xU")) {
 		tdp_min_defs = tdp_min_x6xx45xu;
 		tdp_max_defs = tdp_max_x6xx45xu;
+	/* LOCAL-ONLY TEST PATCH - do not upstream: XMG NEO 16 (E25). Same
+	 * pattern as the GM7IXxN entry above - a direct board-name match
+	 * against TUXEDO's own real, already-tested TDP table for this
+	 * exact board string (normally reached via the STELLARIS16I07 SKU
+	 * match a few lines above), just without requiring that SKU string,
+	 * since this unit's own DMI_PRODUCT_SKU is "XNE16E25", not
+	 * "STELLARIS16I07". Unlike the GM7IXxN case, this unit's own
+	 * physical board vendor/name (NB02 / X6AR5xxY) directly matches, so
+	 * there's no cross-chassis uncertainty here - this is TUXEDO's own
+	 * tested table for this unit's own real board. Still worth
+	 * confirming with a real sustained power/thermal test before fully
+	 * trusting the ceiling. */
+	} else if (dmi_match(DMI_BOARD_NAME, "X6AR5xxY") ||
+		   dmi_match(DMI_BOARD_NAME, "X6AR5xxY_mLED")) {
+		tdp_min_defs = tdp_min_x6ar5xx;
+		tdp_max_defs = tdp_max_x6ar5xx;
 #endif
 	} else {
 		tdp_min_defs = NULL;
