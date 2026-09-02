@@ -78,13 +78,18 @@ values are correct for this specific board.
 
 ## Installing
 
-`install-hydroc16-g1.sh` (in the repo root) reproduces a full setup on a fresh Ubuntu 26.04
-("resolute") install: build prerequisites, a permanent apt pin blocking TUXEDO's stock
-`tuxedo-drivers` package (would silently conflict with this fork's modules), this fork built and
-installed via DKMS, and TUXEDO Control Center installed from a pinned, independently-archived
-binary release (not TUXEDO's live apt repo, to stay isolated from any future unreviewed TCC
-update) — see `arbitrary-string/tuxedo-control-center-archive` for that archive and its source
-mirror. Run it, then reboot to confirm the driver autoloads cleanly from a cold boot.
+`install.sh` (in the repo root) reproduces a full setup on a fresh Ubuntu 26.04 ("resolute")
+install: build prerequisites, a permanent apt pin blocking TUXEDO's stock `tuxedo-drivers`
+package (would silently conflict with this fork's modules), this fork built and installed via
+DKMS, and TUXEDO Control Center installed from a pinned, independently-archived binary release
+(not TUXEDO's live apt repo, to stay isolated from any future unreviewed TCC update) — see
+`arbitrary-string/tuxedo-control-center-archive` for that archive and its source mirror. Run it,
+then reboot to confirm the driver autoloads cleanly from a cold boot.
+
+It's a single installer for every machine this repo supports, not one script per machine — it
+auto-detects the DMI identity it's running on, prints what it recognized, and warns (rather than
+failing partway through) if the hardware isn't one this repo has a local patch for yet. It's also
+safe to re-run.
 
 This has been tested end-to-end, including a full simulated fresh-machine run (not just written
 and assumed correct).
