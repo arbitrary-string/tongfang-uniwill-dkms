@@ -16,10 +16,11 @@
 #      recovery mirror at arbitrary-string/tuxedo-control-center-archive), not TUXEDO's live
 #      apt repo - avoids any risk of a silent future TCC update changing behavior or adding
 #      compatibility checks against this fork, and adds this fork's own features (currently:
-#      lightbar color/brightness control, and an "Enforce hard GPU power limit" toggle that
-#      actually makes the cTGP power-limit slider a real ceiling - stock TCC has neither). A
-#      local placeholder package satisfies TCC's tuxedo-drivers/tuxedo-keyboard dependency
-#      without installing either.
+#      lightbar color/brightness control, an "Enforce hard GPU power limit" toggle that
+#      actually makes the cTGP power-limit slider a real ceiling, and a GPU multiplexer mode
+#      panel that switches the firmware-level iGPU/dGPU/Dynamic MUX - stock TCC has none of
+#      these). A local placeholder package satisfies TCC's tuxedo-drivers/tuxedo-keyboard
+#      dependency without installing either.
 #
 # Safe to re-run: each step either no-ops or cleanly replaces its own prior result.
 #
@@ -29,8 +30,8 @@
 # through. See README.md / ONBOARDING.md for how to add support for a new board first.
 set -euo pipefail
 
-TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center/releases/download/v3.0.9-lightbar.3"
-TCC_DEB="tuxedo-control-center_3.0.9-lightbar.3.deb"
+TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center/releases/download/v3.0.9-lightbar.4"
+TCC_DEB="tuxedo-control-center_3.0.9-lightbar.4.deb"
 PLACEHOLDER_DEB="tuxedo-keyboard-placeholder_4.0.0_all.deb"
 
 confirm_or_exit() {
