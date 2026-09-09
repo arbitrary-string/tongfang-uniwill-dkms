@@ -30,8 +30,8 @@
 # through. See README.md / ONBOARDING.md for how to add support for a new board first.
 set -euo pipefail
 
-TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center/releases/download/v3.0.9-lightbar.4"
-TCC_DEB="tuxedo-control-center_3.0.9-lightbar.4.deb"
+TCC_ARCHIVE_BASE="https://github.com/arbitrary-string/tuxedo-control-center/releases/download/v3.0.9-lightbar.6"
+TCC_DEB="tuxedo-control-center_3.0.9-lightbar.6.deb"
 PLACEHOLDER_DEB="tuxedo-keyboard-placeholder_4.0.0_all.deb"
 
 confirm_or_exit() {
